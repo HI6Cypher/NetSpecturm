@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <net/if.h>
 #include <net/ethernet.h>
+#include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <mqueue.h>
