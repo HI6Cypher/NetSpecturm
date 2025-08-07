@@ -8,12 +8,28 @@ static unsigned int get_ethertype(unsigned char *buf) {
     return ethertype;
 }
 
+static void init_sockaddr_ll_structure(struct sockaddr_ll *addr, unsigned char *iface) {
+    unsigned int ifindex = if_nametoindex(iface);
+    if (ifindex == 0) {
+        /* log */
+        IFINDEX_ERROR(iface);
+    }
+    else {
+        addr->sll_family = AF_PACKET;
+        addr->sll_protocol = htons(ETH_P_ALL);
+        addr->sll_ifindex = ifindex;
+    }
+    return;
+}
+
 unsigned int init_socket(unsigned char *iface) {
     signed int status;
     unsigned int sockfd;
+    struct sockaddr_ll addr;
+    init_sockaddr_ll_structure(&addr, iface);
     sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     /* log */
-    status += setsockopt(sockfd, SOL_SOCKET, SO_BINDTODEVICE, iface, strlen(iface));
+    status += bind(sockfd, (struct sockaddr *) &addr, sizeof (struct sockaddr_ll));
     status += sockfd;
     /* log */
     return (status < sockfd) ? 0 : 1;
@@ -32,7 +48,7 @@ void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t mqdes) {
     /* log */
     if (mtu_size <= 0) {/* log */ MTU_ERROR(mtu_size);}
     while (1) {
-        unsigned char tmp_rcv_buf[mtu_size];
+        unsigned char tmp_rcv_buf[mtu_size + 14];
         length = recvfrom(sockfd, tmp_rcv_buf, sizeof (tmp_rcv_buf), 0, NULL, 0);
         /* log */
         if (check_queue_size(mqdes) == 1) {

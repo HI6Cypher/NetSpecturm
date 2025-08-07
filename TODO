@@ -1,0 +1,3 @@
+TODO : write function dispatcher() in dispatcher.c
+TODO : write function consumer() in consumer.c
+TODO : in consumer etc, change error macros to proper log msg
