@@ -8,6 +8,7 @@
 #include <linux/if.h>
 #endif
 
-unsigned int get_mtu_size(unsigned int sockfd, unsigned char *iface);
+unsigned int get_mtu_ifname(unsigned int sockfd, unsigned char *iface);
+unsigned int get_mtu_ifindex(unsigned int sockfd, unsigned int ifindex);
 
 #endif

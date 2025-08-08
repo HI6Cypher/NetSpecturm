@@ -4,7 +4,7 @@ static Priority priority;
 static Ethertype ethertype;
 
 static unsigned int get_ethertype(unsigned char *buf) {
-    unsigned int ethertype = (buf[12] << 8) | (buf[13]);
+   	unsigned int ethertype = (buf[12] << 8) | (buf[13]);
     return ethertype;
 }
 
@@ -24,7 +24,7 @@ static void init_sockaddr_ll_structure(struct sockaddr_ll *addr, unsigned char *
 
 unsigned int init_socket(unsigned char *iface) {
     signed int status;
-    unsigned int sockfd;
+    signed int sockfd;
     struct sockaddr_ll addr;
     init_sockaddr_ll_structure(&addr, iface);
     sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
@@ -44,7 +44,7 @@ unsigned int check_queue_size(mqd_t mqdes) {
 
 void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t mqdes) {
     signed int length;
-    signed int mtu_size = get_mtu_size(sockfd, iface);
+    signed int mtu_size = get_mtu_ifname(sockfd, iface);
     /* log */
     if (mtu_size <= 0) {/* log */ MTU_ERROR(mtu_size);}
     while (1) {
