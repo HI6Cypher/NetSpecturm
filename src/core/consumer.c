@@ -3,9 +3,10 @@
 static Tags tag;
 
 static void prepare_frame(Frame *frame, unsigned int seq, unsigned int ifindex, size_t size) {
-    frame->status = frame->header_index = 0;
-    frame->buf_index = 14;
-    frame->hnum = 1;
+    frame->status = 0;
+    frame->offset = 14;
+    frame->header_index = 0;
+    frame->header_count = 1;
     frame->sequence = seq;
     frame->ifindex = ifindex;
     frame->time = time(NULL);
@@ -29,35 +30,49 @@ static unsigned int split_ethernet(Frame *frame, unsigned char *buf) {
 }
 
 static void split_frame(Frame *frame, unsigned char *buf) {
-    switch (frame->headers[0]->next) {
+    switch (frame->headers[frame->header_index]->next) {
         case (ARP) :
             split_arp(frame, buf);
+            break;
         case (IPv4) :
             split_ipv4(frame, buf);
+            break;
         case (IPv6) :
             split_ipv6(frame, buf);
+            break;
         case (ICMPv4) :
             split_icmpv4(frame, buf);
+            break;
         case (IGMP) :
             split_igmp(frame, buf);
+            break;
         case (IPIP) :
             split_ipip(frame, buf);
+            break;
         case (TCP) :
             split_tcp(frame, buf);
+            break;
         case (UDP) :
             split_udp(frame,buf);
+            break;
         case (IPv6Encap) :
             split_ipv6(frame, buf);
+            break;
         case (ICMPv6) :
             split_icmpv6(frame, buf);
+            break;
         case (SCTP) :
             split_sctp(frame, buf);
+            break;
         case (UDPLite) :
             split_udplite(frame, buf);
+            break;
         case (DATA) :
             split_unusable(frame, buf);
+            break;
         case default :
             frame->status = 1;
+            break;
     }
     return;
 }

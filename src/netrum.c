@@ -1,8 +1,7 @@
 #include "netrum.h"
 
 unsigned int halloc(Frame *frame) {
-    unsigned short header_number = frame->hnum;
-    Header *tmp = (Header *) realloc(frame->headers, header_number * sizeof (Header));
+    Header *tmp = (Header *) realloc(frame->headers, frame->header_count * sizeof (Header));
     if (!tmp) {/* log */ return 0;}
     frame->headers = tmp;
     return 1;
@@ -10,7 +9,7 @@ unsigned int halloc(Frame *frame) {
 
 void hfree(Frame *frame) {
     unsigned int i;
-    for (i = 0; i < frame->hnum; i++)
+    for (i = 0; i < frame->header_count; i++)
         free(frame->headers[i]->data);
     free(frame->headers);
     return;
@@ -19,5 +18,5 @@ void hfree(Frame *frame) {
 unsigned int new_header(Frame *frame, size_t header_size) {
     if (!halloc(frame)) {/* log */ return 0;}
     frame->header_index++;
-    frame->hnum++;
+    frame->header_count++;
 }

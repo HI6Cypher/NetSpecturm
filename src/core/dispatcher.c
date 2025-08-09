@@ -58,15 +58,19 @@ void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t mqdes) {
                 case (IPv4) :
                     priority = IPv4_PRIO;
                     /* log */
+                    break;
                 case (IPv6) :
                     priority = IPv6_PRIO;
                     /* log */
+                    break;
                 case (ARP) :
                     priority = ARP_PRIO;
                     /* log */
+                    break;
                 default :
                     UNSUPPORTED_ETHERTYPE(type);
                     /* log */
+                    break;
             }
             mq_send_status = mq_send(mqdes, tmp_rcv_buf, sizeof (tmp_rcv_buf), priority);
             if (mq_send_status == -1) {/* log */ MQ_SEND_ERROR(mq_send_status);}

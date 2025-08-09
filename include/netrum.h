@@ -36,9 +36,9 @@ typedef struct {
 
 typedef struct {
     unsigned short status : 1;
-    unsigned short buf_index;
+    unsigned short offset;
     unsigned short header_index;
-    unsigned short hnum;
+    unsigned short header_count;
     unsigned int sequence;
     unsigned int ifindex;
     time_t time;
