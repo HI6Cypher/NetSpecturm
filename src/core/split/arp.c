@@ -10,11 +10,12 @@ static void copy_arp_header_data(Header *arp, unsigned char *buf) {
 }
 
 void split_arp(Frame *frame, unsigned char *buf) {
-    if (!new_header(frame, ARPIP_HEADER_SIZE)) {/* log */ frame->status = 1; return;}
-    frame->headers[frame->header_index]->name = ARP;
-    frame->headers[frame->header_index]->next = DATA;
-    frame->headers[frame->header_index]->size = ARPIP_HEADER_SIZE;
-    copy_arp_header_data(frame->headers[frame->header_index], buf + frame->offset)
+    if (!new_header(frame)) {/* log */ frame->status = 1; return;}
+    Header *arp = &frame->headers[frame->header_index];
+    arp->name = ARP;
+    arp->next = DATA;
+    arp->size = ARPIP_HEADER_SIZE;
+    copy_arp_header_data(arp, buf + frame->offset);
     frame->offset += (unsigned int) ARPIP_HEADER_SIZE;
     return;
 }

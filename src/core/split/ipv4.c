@@ -20,12 +20,12 @@ static void copy_ipv4_proto(Header *ip) {
 }
 
 void split_ipv4(Frame *frame, unsigned char *buf) {
-    size_t size = get_ipv4_header_size(buf + frame->offset);
-    if (!new_header(frame, size)) {/* log */ frame->status = 1; return;}
-    frame->headers[frame->header_index]->name = IPv4;
-    frame->headers[frame->header_index]->size = size;
-    copy_ipv4_header_data(frame->headers[frame->header_index], buf + frame->offset);
-    copy_ipv4_proto(frame->headers[frame->header_index]);
-    frame->offset += (unsigned int) size;
+    if (!new_header(frame)) {/* log */ frame->status = 1; return;}
+    Header *ip = &frame->headers[frame->header_index];
+    ip->name = IPv4;
+    ip->size = get_ipv4_header_size(buf + frame->offset);
+    copy_ipv4_header_data(ip, buf + frame->offset);
+    copy_ipv4_proto(ip);
+    frame->offset += ip->size;
     return;
 }

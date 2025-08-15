@@ -35,23 +35,23 @@ unsigned int init_socket(unsigned char *iface) {
     return (status < sockfd) ? 0 : 1;
 }
 
-unsigned int check_queue_size(mqd_t mqdes) {
+unsigned int check_queue_size(mqd_t qframe) {
     struct mq_attr attr;
-    signed int status = mq_getattr(mqdes, &attr);
+    signed int status = mq_getattr(qframe, &attr);
     if (status == -1) {/* log */ MQ_GETATTR_ERROR(status);}
     return (attr.mq_curmsgs == attr.mq_maxmsg) ? 1 : 0;
 }
 
-void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t mqdes) {
+void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t qframe) {
     signed int length;
     signed int mtu_size = get_mtu_ifname(sockfd, iface);
     /* log */
     if (mtu_size <= 0) {/* log */ MTU_ERROR(mtu_size);}
-    while (1) {
+    while (runstat) {
         unsigned char tmp_rcv_buf[mtu_size + 14];
         length = recvfrom(sockfd, tmp_rcv_buf, sizeof (tmp_rcv_buf), 0, NULL, 0);
         /* log */
-        if (check_queue_size(mqdes) == 1) {
+        if (check_queue_size(qframe) == 1) {
             unsigned int type = get_ethertype(tmp_rcv_buf);
             signed int mq_send_status;
             switch (type) {
@@ -72,7 +72,7 @@ void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t mqdes) {
                     /* log */
                     break;
             }
-            mq_send_status = mq_send(mqdes, tmp_rcv_buf, sizeof (tmp_rcv_buf), priority);
+            mq_send_status = mq_send(qframe, tmp_rcv_buf, sizeof (tmp_rcv_buf), priority);
             if (mq_send_status == -1) {/* log */ MQ_SEND_ERROR(mq_send_status);}
         }
         else {

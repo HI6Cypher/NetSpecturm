@@ -2,6 +2,7 @@
 #define IPV6_H
 
 #include "netrum.h"
+#include "utils/hmem.h"
 #include <stdlib.h>
 #include <string.h>
 

@@ -47,7 +47,7 @@ static void split_frame(Frame *frame, unsigned char *buf) {
             split_igmp(frame, buf);
             break;
         case (IPIP) :
-            split_ipip(frame, buf);
+            split_ipv4(frame, buf);
             break;
         case (TCP) :
             split_tcp(frame, buf);
@@ -68,9 +68,8 @@ static void split_frame(Frame *frame, unsigned char *buf) {
             split_udplite(frame, buf);
             break;
         case (DATA) :
+        default :
             split_unusable(frame, buf);
-            break;
-        case default :
             frame->status = 1;
             break;
     }
@@ -84,6 +83,7 @@ void splitter(Frame *frame, unsigned char *buf) {
         split_frame(frame, buf);
         num++;
     }
+    if (num <= 8) {/* log */}
     return;
 }
 

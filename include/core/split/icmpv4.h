@@ -2,6 +2,7 @@
 #define ICMPV4_H
 
 #include "netrum.h"
+#include "utils/hmem.h"
 #include <stdlib.h>
 #include <string.h>
 

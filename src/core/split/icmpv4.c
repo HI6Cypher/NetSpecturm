@@ -30,7 +30,7 @@ static void copy_icmpv4_next(Header *icmp, unsigned char *buf) {
             icmp->next = DATA;
             icmp->size = 20 * sizeof (char);
             break;
-        case default :
+        default :
             icmp->next = DATA;
             icmp->size = 8 * sizeof (char);
             break;
@@ -47,9 +47,10 @@ static void copy_icmpv4_header_data(Header *icmp, unsigned char *buf) {
 
 void split_icmpv4(Frame *frame, unsigned char *buf) {
     if (!new_header(frame)) {/* log */ frame->status = 1; return;}
-    frame->headers[frame->header_index]->name = ICMPv4;
-    copy_icmpv4_next(frame->headers[frame->header_index], buf + frame->offset);
-    copy_icmpv4_header_data(frame->headers[frame->header_index], buf + frame->offset);
-    frame->offset += (unsigned int) ICMP_HEADER_SIZE;
+    Header *icmp = &frame->headers[frame->header_index];
+    icmp->name = ICMPv4;
+    copy_icmpv4_next(icmp, buf + frame->offset);
+    copy_icmpv4_header_data(icmp, buf + frame->offset);
+    frame->offset += icmp->size;
     return;
 }

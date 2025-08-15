@@ -2,7 +2,8 @@
 #define ARP_H
 
 #include "netrum.h"
-#include <stdlib>
+#include "utils/hmem.h"
+#include <stdlib.h>
 #include <string.h>
 
 #define ARPIP_HEADER_SIZE 0x1c * sizeof (char)

@@ -1,7 +1,7 @@
 #ifndef DISPATCHER_H
 #define DISPATCHER_H
 
-#include "tools/get_mtu.h"
+#include "netrum.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <net/if.h>
