@@ -28,27 +28,27 @@ typedef enum {
 } Tags;
 
 typedef enum {
-    FTPd : 20,
-    FTPc : 21,
-    SSH : 22,
-    TELNET : 23,
-    SMTP : 25,
-    WHOIS : 43,
-    DNS : 53,
-    DHCPv4s : 67,
-    DHCPv4c : 68,
-    TFTP : 69,
-    HTTP : 80,
-    POP3 : 110,
-    TIME : 123,
-    IMAP : 143,
-    HTTPS : 443,
-    DHCPv6c : 546,
-    DHCPv6s : 547,
-    FTPSd : 989,
-    FTPSc : 990,
-    IMAPS : 993,
-    POP3S : 995
+    FTPd = 20,
+    FTPc = 21,
+    SSH = 22,
+    TELNET = 23,
+    SMTP = 25,
+    WHOIS = 43,
+    DNS = 53,
+    DHCPv4s = 67,
+    DHCPv4c = 68,
+    TFTP = 69,
+    HTTP = 80,
+    POP3 = 110,
+    TIME = 123,
+    IMAP = 143,
+    HTTPS = 443,
+    DHCPv6c = 546,
+    DHCPv6s = 547,
+    FTPSd = 989,
+    FTPSc = 990,
+    IMAPS = 993,
+    POP3S = 995
 } Ports;
 
 typedef struct {
