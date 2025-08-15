@@ -1,3 +1,0 @@
-TODO : write function dispatcher() in dispatcher.c
-TODO : in consumer etc, change error macros to proper log msg
-TODO : implement function handle_output() in consumer.c
