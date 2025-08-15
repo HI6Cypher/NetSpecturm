@@ -38,11 +38,6 @@ static void copy_icmpv4_next(Header *icmp, unsigned char *buf) {
     return;
 }
 
-static void copy_icmpv4_header_data(Header *icmp, unsigned char *buf) {
-    copy_header_data(icmp, buf);
-    return;
-}
-
 void split_icmpv4(Frame *frame, unsigned char *buf) {
     Header *icmp;
     if (!new_header(frame)) {/* log */ frame->status = 1; return;}

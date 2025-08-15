@@ -7,6 +7,8 @@
 #include <stddef.h>
 #include <string.h>
 
+#define copy_igmp_header_data(header, buf) copy_header_data(header, buf)
+
 void split_igmpv1_memship_report(Frame *frame, unsigned char *buf);
 void split_igmpv2_memship_report(Frame *frame, unsigned char *buf);
 void split_igmpv3_memship_report(Frame *frame, unsigned char *buf);

@@ -7,6 +7,8 @@
 #include <stddef.h>
 #include <string.h>
 
+#define copy_ipv4_header_data(header, buf) copy_header_data(header, buf)
+
 void split_ipv4(Frame *frame, unsigned char *buf);
 
 #endif

@@ -3,11 +3,6 @@
 static Tags tags;
 static Ports ports;
 
-static void copy_tcp_header_data(Header *tcp, unsigned char *buf) {
-    copy_header_data(tcp, buf);
-    return;
-}
-
 static void copy_tcp_next_header(Header *tcp) {
     /* application layer will be implemented after tests */
     tcp->next = DATA;

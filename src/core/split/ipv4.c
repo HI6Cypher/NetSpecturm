@@ -6,11 +6,6 @@ static size_t get_ipv4_header_size(unsigned char *buf) {
     return (buf[0] & 0xf) * 4;
 }
 
-static void copy_ipv4_header_data(Header *ip, unsigned char *buf) {
-    copy_header_data(ip, buf);
-    return;
-}
-
 static void copy_ipv4_proto(Header *ip) {
     if (!ip->data) {ip->next = DATA; return;}
     ip->next = ip->data[9];

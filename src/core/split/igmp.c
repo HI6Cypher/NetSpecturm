@@ -2,11 +2,6 @@
 
 static Tags tags;
 
-static void copy_igmp_header_data(Header *igmp, unsigned char *buf) {
-    copy_header_data(igmp, buf);
-    return;
-}
-
 static size_t get_igmp_memship_query_size(unsigned char *buf) {
     unsigned int number_of_sources = (
         (buf[10] << 8) |

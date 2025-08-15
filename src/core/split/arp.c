@@ -2,11 +2,6 @@
 
 static Tags tags;
 
-static void copy_arp_header_data(Header *arp, unsigned char *buf) {
-    copy_header_data(arp, buf);
-    return;
-}
-
 void split_arp(Frame *frame, unsigned char *buf) {
     Header *arp;
     if (!new_header(frame)) {/* log */ frame->status = 1; return;}

@@ -2,11 +2,6 @@
 
 static Tags tags;
 
-static void copy_ipv6_header_data(Header *ip, unsigned char *buf) {
-    copy_header_data(ip, buf);
-    return;
-}
-
 static void copy_ipv6_next_header(Header *ip) {
     if (!ip->data) {ip->next = DATA; return;}
     ip->next = ip->data[6];

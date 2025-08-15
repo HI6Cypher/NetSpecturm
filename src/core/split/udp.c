@@ -3,11 +3,6 @@
 static Tags tags;
 static Ports ports;
 
-static void copy_udp_header_data(Header *udp, unsigned char *buf) {
-    copy_header_data(udp, buf);
-    return;
-}
-
 static void copy_udp_next_header(Header *udp) {
     /* applicatin layer will be implemented after tests */
     udp->next = DATA;
@@ -17,7 +12,7 @@ static void copy_udp_next_header(Header *udp) {
 void split_udp(Frame *frame, unsigned char *buf) {
     Header *udp;
     if (!new_header(frame)) {/* log */ frame->status = 1; return;}
-    udp = frame->headers[frame->header_index];
+    udp = &frame->headers[frame->header_index];
     udp->name = UDP;
     udp->size = UDP_HEADER_SIZE;
     copy_udp_header_data(udp, buf + frame->offset);
