@@ -10,6 +10,7 @@
 #include <time.h>
 
 typedef enum {
+    NONE = -0x0001,
     DATA = 0x0000,
     ICMPv4 = 0x0001,
     IGMP = 0x0002,
@@ -19,7 +20,6 @@ typedef enum {
     IPv6Encap = 0x0029,
     ICMPv6 = 0x003a,
     IPv6NoNxt = 0x003b,
-    SCTP = 0x0084,
     UDPLite = 0x0088,
     ETH = 0x00e1,
     ARP = 0x0806,
@@ -27,9 +27,33 @@ typedef enum {
     IPv6 = 0x86dd,
 } Tags;
 
+typedef enum {
+    FTPd : 20,
+    FTPc : 21,
+    SSH : 22,
+    TELNET : 23,
+    SMTP : 25,
+    WHOIS : 43,
+    DNS : 53,
+    DHCPv4s : 67,
+    DHCPv4c : 68,
+    TFTP : 69,
+    HTTP : 80,
+    POP3 : 110,
+    TIME : 123,
+    IMAP : 143,
+    HTTPS : 443,
+    DHCPv6c : 546,
+    DHCPv6s : 547,
+    FTPSd : 989,
+    FTPSc : 990,
+    IMAPS : 993,
+    POP3S : 995
+} Ports;
+
 typedef struct {
-    unsigned int name;
-    unsigned int  next;
+    signed int name;
+    signed int  next;
     unsigned char *data;
     size_t size;
 } Header;

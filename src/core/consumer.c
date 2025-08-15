@@ -1,6 +1,7 @@
 #include "core/consumer.h"
 
 static Tags tag;
+static Ports ports;
 
 static void prepare_frame(Frame *frame, unsigned int seq, unsigned int ifindex, size_t size) {
     frame->status = 0;
@@ -20,8 +21,8 @@ static unsigned int get_ethertype(Header *eth) {
 }
 
 static unsigned int split_ethernet(Frame *frame, unsigned char *buf) {
-    if (!halloc(frame)) {/* log */ return 0;}
     Header *eth = frame->headers[0];
+    if (!halloc(frame)) {/* log */ return 0;}
     eth->name = ETH;
     eth->size = ETH_HEADER_SIZE;
     memcpy(eth->data, buf, eth->size);
@@ -61,11 +62,8 @@ static void split_frame(Frame *frame, unsigned char *buf) {
         case (ICMPv6) :
             split_icmpv6(frame, buf);
             break;
-        case (SCTP) :
-            split_sctp(frame, buf);
-            break;
         case (UDPLite) :
-            split_udplite(frame, buf);
+            split_udp(frame, buf);
             break;
         case (DATA) :
         default :
@@ -83,6 +81,7 @@ void splitter(Frame *frame, unsigned char *buf) {
         split_frame(frame, buf);
         num++;
     }
+    if (frame->status) {split_unusable(frame, buf);}
     if (num <= 8) {/* log */}
     return;
 }
@@ -91,7 +90,7 @@ void handle_output(Frame *frame) {
 
 }
 
-void consumer(mqd_t mqdes, signed int sockfd, unsigned int ifindex) {
+void consumer(mqd_t qframe, signed int sockfd, unsigned int ifindex) {
     unsigned long seq;
     size_t length;
     signed int mtu_size = get_mtu_ifindex(sockfd, ifindex);
@@ -100,7 +99,7 @@ void consumer(mqd_t mqdes, signed int sockfd, unsigned int ifindex) {
     while (runstat) {
         Frame frame;
         unsigned char tmp_buf[mtu_size + 14];
-        length = mq_receive(mqdes, tmp_buf, sizeof (tmp_buf), NULL);
+        length = mq_receive(qframe, tmp_buf, sizeof (tmp_buf), NULL);
         prepare_frame(&frame, seq, ifindex, length);
         splitter(&frame, tmp_buf);
         handle_output(&frame);

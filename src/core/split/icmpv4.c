@@ -39,15 +39,14 @@ static void copy_icmpv4_next(Header *icmp, unsigned char *buf) {
 }
 
 static void copy_icmpv4_header_data(Header *icmp, unsigned char *buf) {
-    icmp->data = (unsigned char *) malloc(icmp->size);
-    if (!icmp->data) {/* log */ return;}
-    memcpy(icmp->data, buf, icmp->size);
+    copy_header_data(icmp, buf);
     return;
 }
 
 void split_icmpv4(Frame *frame, unsigned char *buf) {
+    Header *icmp;
     if (!new_header(frame)) {/* log */ frame->status = 1; return;}
-    Header *icmp = &frame->headers[frame->header_index];
+    icmp = &frame->headers[frame->header_index];
     icmp->name = ICMPv4;
     copy_icmpv4_next(icmp, buf + frame->offset);
     copy_icmpv4_header_data(icmp, buf + frame->offset);
