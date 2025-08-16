@@ -1,4 +1,4 @@
-#include "tools/get_mtu.h"
+#include "utils/get_mtu.h"
 
 unsigned int get_mtu_ifname(unsigned int sockfd, unsigned char *iface) {
     struct ifreq ifr;

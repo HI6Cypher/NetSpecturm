@@ -92,7 +92,7 @@ void handle_output(Frame *frame) {
 
 void consumer(mqd_t qframe, signed int sockfd, unsigned int ifindex) {
     unsigned long seq;
-    size_t length;
+    ssize_t length;
     signed int mtu_size = get_mtu_ifindex(sockfd, ifindex);
     /* log */
     if (mtu_size <= 0) {/* log */ return;}

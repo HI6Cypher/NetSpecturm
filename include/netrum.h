@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
+#include <pthread.h>
 
 typedef enum {
     NONE = -0x0001,
@@ -70,6 +71,10 @@ typedef struct {
     Header *headers;
 } Frame;
 
-extern unsigned char runstat;
-extern signed int netrum_sockfd;
+typedef struct {
+    pthread_mutex_t lock;
+    unsigned short runstat : 1;
+    signed int sockfd;
+} Control;
+
 #endif

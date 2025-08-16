@@ -1,11 +1,20 @@
 #include "core/dispatcher.h"
 
 static Priority priority;
-static Ethertype ethertype;
+static Tags tags;
 
 static unsigned int get_ethertype(unsigned char *buf) {
    	unsigned int ethertype = (buf[12] << 8) | (buf[13]);
     return ethertype;
+}
+
+static unsigned int get_mtu(unsigned int sockfd, unsigned char *iface) {
+    signed int mtu = get_mtu_ifname(sockfd, iface);
+    if (mtu <= 0) {
+        /* log */
+        mtu = BACKUP_MTU;
+    }
+    return (unsigned int) mtu;
 }
 
 static void init_sockaddr_ll_structure(struct sockaddr_ll *addr, unsigned char *iface) {
@@ -42,19 +51,16 @@ unsigned int check_queue_size(mqd_t qframe) {
     return (attr.mq_curmsgs == attr.mq_maxmsg) ? 1 : 0;
 }
 
-void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t qframe) {
-    signed int length;
-    signed int mtu_size = get_mtu_ifname(sockfd, iface);
-    /* log */
-    if (mtu_size <= 0) {/* log */ MTU_ERROR(mtu_size);}
-    while (runstat) {
-        unsigned char tmp_rcv_buf[mtu_size + 14];
-        length = recvfrom(sockfd, tmp_rcv_buf, sizeof (tmp_rcv_buf), 0, NULL, 0);
+void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t qframe, unsigned short *runstat) {
+    signed int length, mtu = get_mtu(sockfd, iface);
+    while (*runstat) {
+        unsigned char tmp_rcv_buf[mtu + 14];
+        length = recvfrom(sockfd, tmp_rcv_buf, sizeof (tmp_rcv_buf), MSG_TRUNC, NULL, 0);
         /* log */
         if (check_queue_size(qframe) == 1) {
-            unsigned int type = get_ethertype(tmp_rcv_buf);
+            unsigned int ethertype = get_ethertype(tmp_rcv_buf);
             signed int mq_send_status;
-            switch (type) {
+            switch (ethertype) {
                 case (IPv4) :
                     priority = IPv4_PRIO;
                     /* log */
@@ -68,16 +74,21 @@ void start_sniffing(unsigned int sockfd, unsigned char *iface, mqd_t qframe) {
                     /* log */
                     break;
                 default :
-                    UNSUPPORTED_ETHERTYPE(type);
                     /* log */
                     break;
             }
             mq_send_status = mq_send(qframe, tmp_rcv_buf, sizeof (tmp_rcv_buf), priority);
-            if (mq_send_status == -1) {/* log */ MQ_SEND_ERROR(mq_send_status);}
-        }
-        else {
             /* log */
-            QUEUE_SIZE_ERROR(length);
         }
+        /* log */
     }
+}
+
+void dispatcher(mqd_t qframe, unsigned char *iface, pthread_mutex_t *lock, unsigned short *runstat, unsigned int *sockfd) {
+    /* log */
+    *sockfd = init_socket(iface);
+    if (!*sockfd) {terminate(lock, runstat, "Unable to create the socket : shutting down..."); return;}
+    start_sniffing(*sockfd, iface, qframe, runstat);
+    /* log */
+    return;
 }
