@@ -9,6 +9,9 @@
 #include <stddef.h>
 #include <time.h>
 #include <pthread.h>
+#include <mqueue.h>
+
+#define MAX_VER_LEN 0x7 * sizeof (char)
 
 typedef enum {
     NONE = -0x0001,
@@ -77,4 +80,7 @@ typedef struct {
     signed int sockfd;
 } Control;
 
+extern mqd_t qframe;
+extern mqd_t qlog;
+extern const unsigned char version[MAX_VER_LEN];
 #endif

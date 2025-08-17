@@ -3,8 +3,10 @@
 
 #include "netrum.h"
 #include "utils/terminate.h"
+#include "utils/log_tool.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <net/if.h>
 #include <net/ethernet.h>
 #include <arpa/inet.h>
@@ -14,7 +16,7 @@
 #include <errno.h>
 #include <linux/if_packet.h>
 
-#define BACKUP_MTU 1500 + 14
+#define BACKUP_MTU 1500
 
 typedef enum {
     IPv4_PRIO,

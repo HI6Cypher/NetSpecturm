@@ -34,8 +34,8 @@ void logger(mqd_t qlog, pthread_mutex_t *lock, unsigned short *runstat) {
         unsigned char clock[16];
         length = mq_receive(qlog, (unsigned char *) &tmp_log, sizeof (tmp_log), NULL);
         if (!length) {shutdown(lock, runstat, "Error on mqueue : shutting down..."); return;}
-        strftime(date, sizeof (date), "%Y-%m-%d", &tmp_log.time);
-        strftime(clock, sizeof (clock), "%H:%M:%S.%f", &tmp_log.time);
+        strftime(date, sizeof (date), "%Y-%m-%d", tmp_log.time);
+        strftime(clock, sizeof (clock), "%H:%M:%S.%f", tmp_log.time);
         append_log(count, tmp_log.level, date, clock, tmp_log.ver, tmp_log.mod, tmp_log.pos, tmp_log.msg);
     }
     return;

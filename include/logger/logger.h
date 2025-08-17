@@ -25,7 +25,7 @@
     do {\
         fprintf(\
             &logfile,\
-            "[0x%lx][%-5.5s][%-10.10s][%-15.15s][VER:%-5.6s][MOD:%-.32s][POS:%-.32s][%-.64s]",\
+            "[0x%lx][%-5.5s][%-10.10s][%-15.15s][VER:%-5.6s][MOD:%-.32s][POS:%-.32s][%-.64s]\n",\
             count, level, date, clock, ver, mod, pos, msg\
         );\
     } while (0)
@@ -36,7 +36,7 @@ typedef struct {
     unsigned char mod[MAX_LOG_MOD];
     unsigned char pos[MAX_LOG_POS];
     unsigned char msg[MAX_LOG_MSG];
-    struct tm time;
+    struct tm *time;
 } Log;
 
 unsigned int create_logfile(FILE *logfile);
