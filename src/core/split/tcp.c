@@ -11,7 +11,12 @@ static void copy_tcp_next_header(Header *tcp) {
 
 void split_tcp(Frame *frame, unsigned char *buf) {
     Header *tcp;
-    if (!new_header(frame)) {/* log */ frame->status = 1; return;}
+    if (!new_header(frame)) {
+        LOG("WARNN", "tcp.c", "split_tcp()", "Unable to allocate new header TCP with offset %d", frame->offset);
+        frame->status = 1;
+        frame->error = 1;
+        return;
+    }
     tcp = &frame->headers[frame->header_index];
     tcp->name = TCP;
     tcp->size = ((buf + frame->offset)[12] >> 4) * 4;

@@ -3,6 +3,7 @@
 
 #include "netrum.h"
 #include "utils/hmem.h"
+#include "utils/log_tool.h"
 #include <stdlib.h>
 #include <string.h>
 

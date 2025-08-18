@@ -11,7 +11,12 @@ static void copy_icmpv6_next(Header *icmp, unsigned char *buf) {
 
 void split_icmpv6(Frame *frame, unsigned char *buf) {
     Header *icmp;
-    if (!new_header(frame)) {/* log */ frame->status = 1; return;}
+    if (!new_header(frame)) {
+        LOG("WARNN", "icmpv6.c", "split_icmpv6()", "Unable to allocate new header for ICMPv6 with offset %d", frame->offset);
+        frame->status = 1;
+        frame->error = 1;
+        return;
+    }
     icmp = &frame->headers[frame->header_index];
     icmp->name = ICMPv6;
     copy_icmpv6_next(icmp, buf + frame->offset);

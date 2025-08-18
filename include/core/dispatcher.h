@@ -16,8 +16,6 @@
 #include <errno.h>
 #include <linux/if_packet.h>
 
-#define BACKUP_MTU 1500
-
 typedef enum {
     IPv4_PRIO,
     ARP_PRIO,

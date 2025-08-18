@@ -8,10 +8,12 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
+#include <net/if.h>
 #include <pthread.h>
 #include <mqueue.h>
 
 #define MAX_VER_LEN 0x7 * sizeof (char)
+#define BACKUP_MTU 1500
 
 typedef enum {
     NONE = -0x0001,
@@ -63,12 +65,13 @@ typedef struct {
 } Header;
 
 typedef struct {
-    unsigned short status : 1;
+    unsigned short status;
+    unsigned short error;
     unsigned short offset;
     unsigned short header_index;
     unsigned short header_count;
     unsigned int sequence;
-    unsigned int ifindex;
+    unsigned char iface[IF_NAMESIZE];
     time_t time;
     size_t size;
     Header *headers;

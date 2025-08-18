@@ -14,7 +14,12 @@ static void copy_ipv4_proto(Header *ip) {
 
 void split_ipv4(Frame *frame, unsigned char *buf) {
     Header *ip;
-    if (!new_header(frame)) {/* log */ frame->status = 1; return;}
+    if (!new_header(frame)) {
+        LOG("WARNN", "ipv4.c", "split_ipv4()", "Unable to allocate new header for IPv4 with offset %d", frame->offset);
+        frame->status = 1;
+        frame->error = 1;
+        return;
+    }
     ip = &frame->headers[frame->header_index];
     ip->name = IPv4;
     ip->size = get_ipv4_header_size(buf + frame->offset);

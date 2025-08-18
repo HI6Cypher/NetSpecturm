@@ -75,7 +75,12 @@ void split_igmp_any(Frame *frame, unsigned char *buf) {
 
 void split_igmp(Frame *frame, unsigned char *buf) {
     unsigned short type = (buf + frame->offset)[0] & 0xf;
-    if (!new_header(frame)) {/* log */ frame->status = 1; return;}
+    if (!new_header(frame)) {
+        LOG("WARNN", "igmp.c", "split_igmp()", "Unable to allocate new header for IGMP with offset %d", frame->offset);
+        frame->status = 1;
+        frame->error = 1;
+        return;
+    }
     frame->headers[frame->header_index].name = IGMP;
     switch (type) {
         case (0x12) :
@@ -95,6 +100,8 @@ void split_igmp(Frame *frame, unsigned char *buf) {
             break;
         default :
             split_igmp_any(frame, buf);
+            LOG("WARNN", "igmp.c", "split_igmp()", "Unknown IGMP type %d", type);
+            break;
     }
     return;
 }

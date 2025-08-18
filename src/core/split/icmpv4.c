@@ -40,7 +40,12 @@ static void copy_icmpv4_next(Header *icmp, unsigned char *buf) {
 
 void split_icmpv4(Frame *frame, unsigned char *buf) {
     Header *icmp;
-    if (!new_header(frame)) {/* log */ frame->status = 1; return;}
+    if (!new_header(frame)) {
+        LOG("WARNN", "icmpv4.c", "split_icmpv4()", "Unable to allocate new header for ICMPv4 with offset %d", frame->offset);
+        frame->status = 1;
+        frame->error = 1;
+        return;
+    }
     icmp = &frame->headers[frame->header_index];
     icmp->name = ICMPv4;
     copy_icmpv4_next(icmp, buf + frame->offset);
